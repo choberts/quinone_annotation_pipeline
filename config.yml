@@ -1,0 +1,3 @@
+dataset: "proteo_dataset_2020_standardized"
+hmm_profiles: "profiles/QuinGenesDB_article_one/QuinGenesDB_art_one.hmm"
+taxonomy_path: "data/proteo_dataset_2020_standardized/list_with_taxonomy.csv"
