@@ -61,6 +61,12 @@ def filt_on_genes(dataframe):
 def get_interm_table(dataframe, dataset):
     dataframe = filt_on_genes(dataframe)
     df_interm = dataframe[['genome', 'target', 'query', 'i-evalue', 'score']]
+    df_interm['gene_name'] = df_interm['target']
+    df_interm.replace({"gene_name": r'UbiX2'}, {"gene_name": 'UbiX'}, regex=True, inplace=True)
+    df_interm.replace({"gene_name": r'UbiT2'}, {"gene_name": 'UbiT'}, regex=True, inplace=True)
+    df_interm.replace({"gene_name": r'RquA2'}, {"gene_name": 'RquA'}, regex=True, inplace=True)
+    df_interm.replace({"gene_name": r'MqnM2'}, {"gene_name": 'MqnM'}, regex=True, inplace=True)
+    df_interm.replace({"gene_name": r'FMO_Cyano'}, {"gene_name": 'UbiFHILM_Cyano'}, regex=True, inplace=True)
     df_interm.to_csv('results/'+dataset+'/'+dataset+'_intermediate_results_hmmscan.tsv', sep='\t')
 
 
@@ -99,6 +105,11 @@ def get_filenames(df_tax):
         df_tax['genome'] = df_tax['genome'].fillna(extracted_id_genbank[1])
     except KeyError:
         return df_tax
+    if 'ftp_path' in df_tax.columns:
+        try:
+            df_tax['genome'] = df_tax['genome'].fillna(df_tax['assembly_accession'])
+        except KeyError:
+            return df_tax
     return df_tax
 
 
@@ -109,7 +120,7 @@ def add_taxonomy(dataframe, dataframe_tax):
     """
     dataframe_tax = get_filenames(dataframe_tax)
     #print(dataframe_tax['genome'])
-    dataframe_merged = dataframe.merge(dataframe_tax, on = ['genome'], how="inner")
+    dataframe_merged = dataframe.merge(dataframe_tax, on = ['genome'], how="left")
     #print(dataframe_merged)
     return dataframe_merged
 
@@ -150,7 +161,7 @@ if __name__ == "__main__":
     IEVAL = float(args.ieval)
     COV = float(args.cov)
     DS = OUT.split("/")[1]
-    DS_PATH = "data/"+OUT
+    DS_PATH = "data/"+DS
 
     DF = read_hmmscan_table(FILE)
     DF_BH = best_hit(DF)
@@ -164,7 +175,10 @@ if __name__ == "__main__":
     ### add taxonomy
     if args.tax:
         OUT_TAX = OUT.replace('.tsv', '_tax.tsv')
-        TAX = pd.read_csv(args.tax, low_memory=False)
+        try:
+            TAX = pd.read_csv(args.tax, low_memory=False)
+        except Exception:
+            TAX = pd.read_csv(args.tax, sep='\t')
         print(TAX)
         DF_TAX = add_taxonomy(DF_QUIN_CLEAN, TAX)
         DF_TAX.to_csv(OUT_TAX, sep='\t')
