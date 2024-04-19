@@ -47,12 +47,14 @@ rule aggregate_hmmscan:
 
 rule generate_tables:
     params:
-        tax = config["taxonomy_path"]
+        tax = config["taxonomy_path"],
+        ieval = config["ieval"],
+        cover = config["cover"]
     input:
         hmmscan_res = "results/{dataset}/{dataset}_hmmscan_agg.tsv",
         script = "scripts/parse_hmmscan_agg.py"
     output:
         "results/{dataset}/{dataset}_annot_res.tsv"
     shell:
-        "python {input.script} -F {input.hmmscan_res} -T {params.tax} -O {output} -i 0.005 -c 0.5"
+        "python {input.script} -F {input.hmmscan_res} -T {params.tax} -O {output} -i {params.ieval} -c {params.cover}"
 

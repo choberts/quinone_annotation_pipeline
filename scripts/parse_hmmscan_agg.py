@@ -176,9 +176,9 @@ if __name__ == "__main__":
     if args.tax:
         OUT_TAX = OUT.replace('.tsv', '_tax.tsv')
         try:
-            TAX = pd.read_csv(args.tax, low_memory=False)
+            TAX = pd.read_csv(args.tax, low_memory=False, index_col=0)
         except Exception:
-            TAX = pd.read_csv(args.tax, sep='\t')
+            TAX = pd.read_csv(args.tax, sep='\t', index_col=0)
         print(TAX)
         DF_TAX = add_taxonomy(DF_QUIN_CLEAN, TAX)
         DF_TAX.to_csv(OUT_TAX, sep='\t')
