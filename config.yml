@@ -1,3 +1,8 @@
-dataset: "proteo_dataset_2020_standardized"
-hmm_profiles: "profiles/QuinGenesDB_article_one/QuinGenesDB_art_one.hmm"
-taxonomy_path: "data/proteo_dataset_2020_standardized/list_with_taxonomy.csv"
+dataset: "ramlibacter_genomes_standardized"
+hmm_profiles: "profiles/QuinGenesDB_article_one_enhanced/QuinGenesDB_art_one.hmm"
+taxonomy_path: "/DATA2/choberts/prog/quinone_annotation_pipeline/data/ramlibacter_genomes_standardized/list_with_taxonomy.csv"
+
+# filters
+
+ieval: 0.001
+cover: 0.5
